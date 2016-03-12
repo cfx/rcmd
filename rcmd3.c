@@ -95,6 +95,12 @@ int extract_opts(int argc, char **argv)
   return 0;
 }
 
+static int close_channel(ssh_channel ch)
+{
+  ssh_channel_close(ch);
+  ssh_channel_free(ch);
+  return SSH_OK;
+}
 
 int run_cmd(ssh_session session, char *ip_addr)
 {
@@ -132,23 +138,20 @@ int run_cmd(ssh_session session, char *ip_addr)
 
     if (write(1, buf, nbytes) != (unsigned int) nbytes)
     {
-      ssh_channel_close(channel);
-      ssh_channel_free(channel);
+      close_channel(channel);
       return SSH_ERROR;
     }
   }
 
   if (nbytes < 0)
   {
-    ssh_channel_close(channel);
-    ssh_channel_free(channel);
+    close_channel(channel);
     return SSH_ERROR;
   }
 
-  //printf("\n\n%d\n\n", nbytes);
   ssh_channel_send_eof(channel);
-  ssh_channel_close(channel);
-  ssh_channel_free(channel);
+  close_channel(channel);
+
   return SSH_OK;
 }
 
