@@ -5,10 +5,7 @@
 #include <libssh/libssh.h>
 #include <libssh/callbacks.h>
 
-
-// gcc -o rcmd3 -DDEBUG=9 -pedantic -Wall -g rcmd3.c -lssh -lssh_threads
-// ./rcmd3 -h 54.146.159.150,107.22.64.54
-
+// gcc -o rcmd3 -DDEBUG=9 -Wall -g rcmd3.c -lssh -lssh_threads
 
 #define MAX_IPS 128
 #define IP_STR_LEN 16
@@ -25,7 +22,8 @@ long timeout = 30;
 char ips[MAX_IPS][IP_STR_LEN];
 char *cmd_opt, *key_opt, *user_opt, *timeout_opt;
 
-int extract_ips(char ips_opt[])
+
+static int extract_ips(char ips_opt[])
 {
   int ip, i, j, c;
 
@@ -55,7 +53,7 @@ int extract_ips(char ips_opt[])
 }
 
 
-int extract_opts(int argc, char **argv)
+static int extract_opts(int argc, char **argv)
 {
   int c;
   cmd_opt = key_opt = user_opt = NULL;
@@ -102,55 +100,55 @@ static int close_channel(ssh_channel ch)
   return SSH_OK;
 }
 
-int run_cmd(ssh_session session, char *ip_addr)
+static int run_cmd(ssh_session session, char *ip_addr)
 {
-  ssh_channel channel;
-  int rc;
+  ssh_channel ch;
   char buf[OUTPUT_BUF_SIZE];
-  int nbytes;
+  int rc, nbytes, is_stderr = 0;
 
-  channel = ssh_channel_new(session);
-  if (channel == NULL)
+  ch = ssh_channel_new(session);
+
+  if (ch == NULL)
     return SSH_ERROR;
 
-  rc = ssh_channel_open_session(channel);
+  rc = ssh_channel_open_session(ch);
 
-  if (rc != SSH_OK)
-  {
-    ssh_channel_free(channel);
+  if (rc != SSH_OK) {
+    ssh_channel_free(ch);
     return rc;
   }
 
-  rc = ssh_channel_request_exec(channel, cmd_opt);
+  rc = ssh_channel_request_exec(ch, cmd_opt);
 
-  if (rc != SSH_OK)
-  {
-    ssh_channel_close(channel);
-    ssh_channel_free(channel);
+  if (rc != SSH_OK) {
+    close_channel(ch);
     return rc;
   }
 
-  while ((nbytes = ssh_channel_read(channel, buf, OUTPUT_BUF_SIZE, 0)) > 0)
-  {
+  nbytes = ssh_channel_read(ch, buf, OUTPUT_BUF_SIZE, is_stderr);
+  if (nbytes == 0) {
+    is_stderr = 1;
+    nbytes = ssh_channel_read(ch, buf, OUTPUT_BUF_SIZE, is_stderr);
+  }
 
+  while (nbytes > 0) {
     if (ip_opt)
       printf("\e[32m%s:\e[39m\n", ip_addr);
 
-    if (write(1, buf, nbytes) != (unsigned int) nbytes)
-    {
-      close_channel(channel);
+    if (write(1, buf, nbytes) != (unsigned int) nbytes) {
+      close_channel(ch);
       return SSH_ERROR;
     }
+    nbytes = ssh_channel_read(ch, buf, OUTPUT_BUF_SIZE, is_stderr);
   }
 
-  if (nbytes < 0)
-  {
-    close_channel(channel);
+  if (nbytes < 0) {
+    close_channel(ch);
     return SSH_ERROR;
   }
 
-  ssh_channel_send_eof(channel);
-  close_channel(channel);
+  ssh_channel_send_eof(ch);
+  close_channel(ch);
 
   return SSH_OK;
 }
@@ -208,7 +206,7 @@ int main(int argc, char **argv)
     for (i=0; i < ips_len; i++) {
       t = pthread_create(&threads[i], NULL, ssh_exec, (void*) ips[i]);
       if(t) {
-        fprintf(stderr,"Error - pthread_create() return code: %d\n",t);
+        fprintf(stderr,"Error - pthread_create() return code: %d\n", t);
       }
     }
 
