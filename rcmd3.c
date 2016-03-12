@@ -20,9 +20,10 @@ const int port = 22;
 
 int ips_len = 0;
 int ip_opt = 1;
+long timeout = 30;
 
 char ips[MAX_IPS][IP_STR_LEN];
-char *cmd_opt, *key_opt, *user_opt;
+char *cmd_opt, *key_opt, *user_opt, *timeout_opt;
 
 int extract_ips(char ips_opt[])
 {
@@ -59,7 +60,7 @@ int extract_opts(int argc, char **argv)
   int c;
   cmd_opt = key_opt = user_opt = NULL;
 
-  while ((c = getopt(argc, argv, "h:u:c:k:q")) != -1)
+  while ((c = getopt(argc, argv, "h:u:c:k:t:q")) != -1)
     switch(c) {
     case 'h':
       if (extract_ips(optarg) != 0)
@@ -76,6 +77,9 @@ int extract_opts(int argc, char **argv)
       break;
     case 'q':
       ip_opt = 0;
+      break;
+    case 't':
+      timeout = (long) *optarg - '0';
       break;
     case '?':
       printf("woof");
@@ -165,6 +169,7 @@ static void *ssh_exec(void *ip)
   ssh_options_set(session, SSH_OPTIONS_HOST, ip_addr);
   ssh_options_set(session, SSH_OPTIONS_LOG_VERBOSITY, &verbosity);
   ssh_options_set(session, SSH_OPTIONS_PORT, &port);
+  ssh_options_set(session, SSH_OPTIONS_TIMEOUT, &timeout);
 
   conn = ssh_connect(session);
 
