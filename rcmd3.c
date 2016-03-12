@@ -134,7 +134,6 @@ int run_cmd(ssh_session session, char *ip_addr)
     {
       ssh_channel_close(channel);
       ssh_channel_free(channel);
-      printf("\n\nError!!\n");
       return SSH_ERROR;
     }
   }
@@ -163,7 +162,7 @@ static void *ssh_exec(void *ip)
   ip_addr = (char *) ip;
 
   if (session == NULL)
-    exit(-1);
+    fprintf(stderr, "error: session null\n");
 
   ssh_options_set(session, SSH_OPTIONS_USER, user_opt);
   ssh_options_set(session, SSH_OPTIONS_HOST, ip_addr);
