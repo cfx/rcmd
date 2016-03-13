@@ -20,7 +20,8 @@ int ip_opt = 1;
 long timeout = 30;
 
 char ips[MAX_IPS][IP_STR_LEN];
-char *cmd_opt, *key_opt, *user_opt, *timeout_opt;
+char *cmd_opt, *key_opt, *login_opt, *timeout_opt;
+
 
 
 static int extract_ips(char ips_opt[])
@@ -30,7 +31,7 @@ static int extract_ips(char ips_opt[])
   for (i=0, ip=0, j=0; (c = ips_opt[i]) != '\0'; ++i) {
     if (ip >= MAX_IPS) {
       fprintf(stderr, "Max IPs is %d\n", MAX_IPS);
-      return 1;
+      return -1;
     }
 
     if (c == ',') {
@@ -42,7 +43,7 @@ static int extract_ips(char ips_opt[])
 
     if (j > IP_STR_LEN) {
       fprintf(stderr, "Incorrect IP in -h option.\n");
-      return 1;
+      return -1;
     }
   }
 
@@ -52,15 +53,25 @@ static int extract_ips(char ips_opt[])
   return 0;
 }
 
+static void usage()
+{
+  printf("usage: rcmd [-H hosts] [-c remote_command]\n"
+         "            [-k path/to/private_key]\n"
+         "            [-l login_name]\n"
+         "            [-t timeout]\n"
+         );
+}
+
+
 
 static int extract_opts(int argc, char **argv)
 {
   int c;
-  cmd_opt = key_opt = user_opt = NULL;
+  cmd_opt = key_opt = login_opt = NULL;
 
-  while ((c = getopt(argc, argv, "h:u:c:k:t:q")) != -1)
+  while ((c = getopt(argc, argv, "H:l:c:k:t:qh")) != -1)
     switch(c) {
-    case 'h':
+    case 'H':
       if (extract_ips(optarg) != 0)
         return -1;
       break;
@@ -70,8 +81,8 @@ static int extract_opts(int argc, char **argv)
     case 'k':
       key_opt = optarg;
       break;
-    case 'u':
-      user_opt = optarg;
+    case 'l':
+      login_opt = optarg;
       break;
     case 'q':
       ip_opt = 0;
@@ -79,16 +90,16 @@ static int extract_opts(int argc, char **argv)
     case 't':
       timeout = (long) *optarg - '0';
       break;
-    case '?':
-      printf("woof");
-      return -1;
+    case 'h':
+      usage();
+      break;
     }
 
   if (key_opt == NULL)
     key_opt = getenv("RCMD_PK_PATH");
 
-  if (user_opt == NULL)
-    user_opt = getenv("RCMD_USER");
+  if (login_opt == NULL)
+    login_opt = getenv("RCMD_LOGIN");
 
   return 0;
 }
@@ -165,7 +176,7 @@ static void *ssh_exec(void *ip)
   if (session == NULL)
     fprintf(stderr, "error: session null\n");
 
-  ssh_options_set(session, SSH_OPTIONS_USER, user_opt);
+  ssh_options_set(session, SSH_OPTIONS_USER, login_opt);
   ssh_options_set(session, SSH_OPTIONS_HOST, ip_addr);
   ssh_options_set(session, SSH_OPTIONS_LOG_VERBOSITY, &verbosity);
   ssh_options_set(session, SSH_OPTIONS_PORT, &port);
@@ -213,7 +224,9 @@ int main(int argc, char **argv)
     for (i=0; i<ips_len; i++) {
       t = pthread_join(threads[i], NULL);
     }
-  }
 
-  exit(EXIT_SUCCESS);
+    exit(EXIT_SUCCESS);
+  } else {
+    exit(EXIT_FAILURE);
+  }
 }
