@@ -5,7 +5,7 @@
 #include <libssh/libssh.h>
 #include <libssh/callbacks.h>
 
-// gcc -o rcmd3 -DDEBUG=9 -Wall -g rcmd3.c -lssh -lssh_threads
+// gcc -o rcmd -DDEBUG=9 -Wall -g rcmd.c -lssh -lssh_threads
 
 #define MAX_IPS 128
 #define IP_STR_LEN 16
@@ -21,7 +21,6 @@ long timeout = 30;
 
 char ips[MAX_IPS][IP_STR_LEN];
 char *cmd_opt, *key_opt, *login_opt, *timeout_opt;
-
 
 
 static int extract_ips(char ips_opt[])
