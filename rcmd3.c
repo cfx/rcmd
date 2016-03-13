@@ -183,9 +183,9 @@ static void *ssh_exec(void *ip)
 
   if (ssh_userauth_publickey(session, NULL, k) != SSH_AUTH_SUCCESS) {
     fprintf(stderr, "error: %s (%s)\n\n", ssh_get_error(session), ip_addr);
+  } else {
+    run_cmd(session, ip_addr);
   }
-
-  run_cmd(session, ip_addr);
 
   ssh_key_free(k);
   ssh_disconnect(session);
