@@ -14,18 +14,19 @@
 /*  int verbosity = SSH_LOG_PROTOCOL; */
 const int verbosity = SSH_LOG_NOLOG;
 const int port = 22;
-
-int ips_len = 0;
-int ip_opt = 1;
 long timeout = 30;
 
-char ips[MAX_IPS][IP_STR_LEN];
+uint8_t ips_len = 0;
+uint8_t ip_opt = 1;
+
+
+uint8_t ips[MAX_IPS][IP_STR_LEN];
 char *cmd_opt, *key_opt, *login_opt, *timeout_opt;
 
 
 static int extract_ips(char ips_opt[])
 {
-  int ip, i, j, c;
+  uint32_t ip, i, j, c;
 
   for (i=0, ip=0, j=0; (c = ips_opt[i]) != '\0'; ++i) {
     if (ip >= MAX_IPS) {
@@ -65,7 +66,7 @@ static void usage()
 
 static int extract_opts(int argc, char **argv)
 {
-  int c;
+  int16_t c;
   cmd_opt = key_opt = login_opt = NULL;
 
   while ((c = getopt(argc, argv, "H:l:c:k:t:qh")) != -1)
@@ -103,18 +104,18 @@ static int extract_opts(int argc, char **argv)
   return 0;
 }
 
-static int close_channel(ssh_channel ch)
+static int32_t close_channel(ssh_channel ch)
 {
   ssh_channel_close(ch);
   ssh_channel_free(ch);
   return SSH_OK;
 }
 
-static int run_cmd(ssh_session session, char *ip_addr)
+static int32_t run_cmd(ssh_session session, char *ip_addr)
 {
   ssh_channel ch;
-  char buf[OUTPUT_BUF_SIZE];
-  int rc, nbytes, is_stderr = 0;
+  uint8_t buf[OUTPUT_BUF_SIZE];
+  int32_t rc, nbytes, is_stderr = 0;
 
   ch = ssh_channel_new(session);
 
@@ -165,7 +166,7 @@ static int run_cmd(ssh_session session, char *ip_addr)
 
 static void *ssh_exec(void *ip)
 {
-  int conn;
+  int8_t conn;
   char *ip_addr;
   ssh_key k;
   ssh_session session = ssh_new();
@@ -204,13 +205,13 @@ static void *ssh_exec(void *ip)
   return NULL;
 }
 
-int main(int argc, char **argv)
+int main(int32_t argc, char **argv)
 {
   if (extract_opts(argc, argv) != -1) {
     ssh_threads_set_callbacks(ssh_threads_get_pthread());
     ssh_init();
 
-    int i, t;
+    int32_t i, t;
     pthread_t threads[ips_len];
 
     for (i=0; i < ips_len; i++) {
