@@ -3,6 +3,7 @@
 
 AC_PREREQ([2.69])
 AC_INIT([rcmd], [0.1], [jozef@purpakana.com])
+AC_CONFIG_AUX_DIR([build-aux])
 AM_INIT_AUTOMAKE
 AC_CONFIG_SRCDIR([src/rcmd.c])
 
