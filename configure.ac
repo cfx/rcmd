@@ -13,7 +13,7 @@ AC_PROG_CC
 # Checks for libraries.
 
 # Checks for header files.
-AC_CHECK_HEADERS([stdlib.h unistd.h pthread.h libssh/libssh.h libssh/callbacks.h])
+AC_CHECK_HEADERS([stdlib.h unistd.h getopt.hpthread.h libssh/libssh.h libssh/callbacks.h])
 
 
 # Checks for library functions.
