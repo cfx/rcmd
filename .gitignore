@@ -3,3 +3,7 @@ rcmd
 rcmd_p*
 ips.sh
 .DS_Store
+autom4te.cache
+autoscan.log
+config.log
+config.status
