@@ -246,7 +246,7 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 AM_LDFLAGS = -pthread -lssh -lssh_threads
-AM_CFLAGS = -Wall -std=c99 -O2
+AM_CFLAGS = -Wall -std=c99 -O2 -Qunused-arguments
 rcmd_SOURCES = rcmd.c
 all: all-am
 
