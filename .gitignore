@@ -1,9 +1,10 @@
-*dSYM/
 rcmd
-rcmd_p*
-ips.sh
 .DS_Store
 autom4te.cache
 autoscan.log
 config.log
 config.status
+Makefile
+src/.deps/
+src/Makefile
+src/rcmd.o
