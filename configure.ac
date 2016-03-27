@@ -8,7 +8,7 @@ AM_INIT_AUTOMAKE
 AC_CONFIG_SRCDIR([src/rcmd.c])
 
 # Checks for programs.
-AC_PROG_CC
+AC_PROG_CC([gcc])
 
 # Checks for libraries.
 
