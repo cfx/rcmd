@@ -626,6 +626,8 @@ ac_subst_vars='am__EXEEXT_FALSE
 am__EXEEXT_TRUE
 LTLIBOBJS
 LIBOBJS
+DARWIN_FALSE
+DARWIN_TRUE
 EGREP
 GREP
 CPP
@@ -3902,6 +3904,31 @@ done
 
 
 
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking Checking if running on Darwin" >&5
+$as_echo_n "checking Checking if running on Darwin... " >&6; }
+
+ if false; then
+  DARWIN_TRUE=
+  DARWIN_FALSE='#'
+else
+  DARWIN_TRUE='#'
+  DARWIN_FALSE=
+fi
+
+UNAME=`uname -s`
+if test "x$UNAME" = "xDarwin"; then
+    if true; then
+  DARWIN_TRUE=
+  DARWIN_FALSE='#'
+else
+  DARWIN_TRUE='#'
+  DARWIN_FALSE=
+fi
+
+fi
+
+
+
 # Checks for library functions.
 ac_config_files="$ac_config_files Makefile src/Makefile"
 
@@ -4072,6 +4099,14 @@ Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${am__fastdepCC_TRUE}" && test -z "${am__fastdepCC_FALSE}"; then
   as_fn_error $? "conditional \"am__fastdepCC\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
+if test -z "${DARWIN_TRUE}" && test -z "${DARWIN_FALSE}"; then
+  as_fn_error $? "conditional \"DARWIN\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
+if test -z "${DARWIN_TRUE}" && test -z "${DARWIN_FALSE}"; then
+  as_fn_error $? "conditional \"DARWIN\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 

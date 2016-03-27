@@ -16,6 +16,16 @@ AC_PROG_CC([gcc])
 AC_CHECK_HEADERS([stdlib.h unistd.h getopt.hpthread.h libssh/libssh.h libssh/callbacks.h])
 
 
+AC_MSG_CHECKING([Checking if running on Darwin])
+
+AM_CONDITIONAL([DARWIN], [false])
+UNAME=`uname -s`
+if test "x$UNAME" = "xDarwin"; then
+   AM_CONDITIONAL([DARWIN], [true])
+fi
+
+
+
 # Checks for library functions.
 AC_CONFIG_FILES([Makefile src/Makefile])
 AC_OUTPUT

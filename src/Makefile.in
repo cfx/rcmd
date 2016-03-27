@@ -87,6 +87,7 @@ NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
 bin_PROGRAMS = rcmd$(EXEEXT)
+@DARWIN_TRUE@am__append_1 = -Qunused-arguments
 subdir = src
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/configure.ac
@@ -246,7 +247,7 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 AM_LDFLAGS = -pthread -lssh -lssh_threads
-AM_CFLAGS = -Wall -std=c99 -O2
+AM_CFLAGS = -Wall -std=c99 -O2 $(am__append_1)
 rcmd_SOURCES = rcmd.c
 all: all-am
 
