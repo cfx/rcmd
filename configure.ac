@@ -3,6 +3,7 @@
 
 AC_PREREQ([2.69])
 AC_INIT([rcmd], [0.1], [jozef@purpakana.com])
+AM_INIT_AUTOMAKE
 AC_CONFIG_SRCDIR([src/rcmd.c])
 
 # Checks for programs.
@@ -15,5 +16,5 @@ AC_CHECK_HEADERS([stdlib.h unistd.h pthread.h libssh/libssh.h libssh/callbacks.h
 
 
 # Checks for library functions.
-
+AC_CONFIG_FILES([Makefile src/Makefile])
 AC_OUTPUT
