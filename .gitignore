@@ -5,6 +5,9 @@ autoscan.log
 config.log
 config.status
 Makefile
+Makefile.in
+configure
+aclocal.m4
+build-aux
 src/.deps/
-src/Makefile
 src/rcmd.o
