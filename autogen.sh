@@ -1,2 +1,6 @@
 #!/bin/sh
-autoreconf -vif
+
+mkdir -p build-aux
+aclocal
+autoconf
+automake --add-missing
