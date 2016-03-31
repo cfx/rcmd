@@ -1,0 +1,3 @@
+	0.1.1 (20160331):
+
+	- allow to use non-ip addresses in -H option

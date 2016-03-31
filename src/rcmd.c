@@ -6,10 +6,8 @@
 #include <libssh/libssh.h>
 #include <libssh/callbacks.h>
 
-// gcc -o rcmd -DDEBUG=9 -Wall -g rcmd.c -lssh -lssh_threads
-
 #define MAX_IPS 128
-#define IP_STR_LEN 16
+#define IP_STR_LEN 128
 #define OUTPUT_BUF_SIZE 512
 
 /*  int verbosity = SSH_LOG_PROTOCOL; */
@@ -40,11 +38,6 @@ static int extract_ips(char ips_opt[])
       j = 0;
     } else {
       ips[ip][j++] = c;
-    }
-
-    if (j > IP_STR_LEN) {
-      fprintf(stderr, "Incorrect IP in -h option.\n");
-      return -1;
     }
   }
 
