@@ -13,7 +13,7 @@ AC_PROG_CC([gcc])
 # Checks for libraries.
 
 # Checks for header files.
-AC_CHECK_HEADERS([stdlib.h unistd.h getopt.hpthread.h libssh/libssh.h libssh/callbacks.h])
+AC_CHECK_HEADERS([stdlib.h stdint.h unistd.h getopt.hpthread.h libssh/libssh.h libssh/callbacks.h])
 
 
 AC_MSG_CHECKING([Checking if running on Darwin])
